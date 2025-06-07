@@ -1,5 +1,5 @@
+# -*- coding: utf-8 -*-
 import csv
-
 from app_calc.count_years import count_years
 
 

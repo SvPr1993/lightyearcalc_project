@@ -1,6 +1,8 @@
+# -*- coding: utf-8 -*-
 from app_calc.views import input_data
 
 
 def count_years():
-    full_sum = input_data * 9, 460730472580
+    sum = input_data()
+    full_sum = sum * 9, 460730472580
     return full_sum

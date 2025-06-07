@@ -1,0 +1,57 @@
+*{
+    font-family: Century Gothic;
+}
+
+body {
+    background-size: cover;
+    background-image: url('../img/space.jpg');
+}
+
+.content-box{
+    text-align: center;
+    align-items: center;
+    margin-top: 150px;
+}
+
+.planet-name{
+    text-align: center;
+    align-items: center;
+    font-size: 35px;
+    color: white;
+}
+
+.destination{
+    text-align: center;
+    align-items: center;
+    font-size: 35px;
+    color: white;
+}
+
+
+.button-send{
+    text-align: center;
+    align-items: center;
+    font-size: 35px;
+    transition: background 0.8s;
+}
+
+
+.text-result{
+    color: white;
+    font-size: 35px;
+}
+
+.answer-box {
+    background-color: #fffefe;
+    border: 1px solid #dbdbdb;
+    max-width: 500px;
+    height: 100px;
+    justify-content: center;
+    box-shadow: 0 0 5px 2px;
+    color: black;
+    display: block;
+    margin-left: 700px;
+    margin-top: 50px;
+    align-items: center;
+    position: static;
+}
