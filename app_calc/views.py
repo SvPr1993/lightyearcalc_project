@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from django.http import JsonResponse, HttpResponse
-from django.shortcuts import render, redirect
+from django.http import JsonResponse
+from django.shortcuts import render
 import json
 from app_calc.forms import DataCalcForm
 
@@ -12,6 +12,7 @@ def first_page(request):
             planet_name = form.cleaned_data["planet_name"]
             destination_sum = form.cleaned_data["destination_sum"]
             full_data = json.dumps({"1": planet_name, "2": destination_sum})
+            answer_text = f'Расстояние до планеты {planet_name} равно {destination_sum}'
             return JsonResponse(full_data, safe=False)
     else:
         form = DataCalcForm()
