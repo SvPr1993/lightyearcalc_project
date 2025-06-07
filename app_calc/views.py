@@ -1,13 +1,20 @@
 # -*- coding: utf-8 -*-
 from django.http import JsonResponse, HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 import json
-from django.template import loader
+from app_calc.forms import DataCalcForm
 
 
-def input_data(request):
-    template = loader.get_template("index.html")
-    planet_name = input("Введите название планеты: ")
-    destination_sum = input("Введите количество световых лет до планеты: ")
-    full_data = json.dumps({"1": planet_name, "2": destination_sum})
-    return JsonResponse(full_data, safe=False)
+def first_page(request):
+    if request.method == 'POST':
+        form = DataCalcForm(request.POST)
+        if form.is_valid():
+            planet_name = form.cleaned_data["planet_name"]
+            destination_sum = form.cleaned_data["destination_sum"]
+            full_data = json.dumps({"1": planet_name, "2": destination_sum})
+            return JsonResponse(full_data, safe=False)
+    else:
+        form = DataCalcForm()
+    return render(request, "../templates/index.html", {'form': form})
+
+

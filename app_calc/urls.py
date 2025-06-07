@@ -1,7 +1,7 @@
 from django.urls import path
 
-from app_calc.views import input_data
+from app_calc.views import first_page
 
 urlpatterns = [
-    path("", input_data),
+    path("", first_page),
 ]
