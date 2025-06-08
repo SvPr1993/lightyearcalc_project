@@ -12,8 +12,9 @@ def first_page(request):
             planet_name = form.cleaned_data["planet_name"]
             destination_sum = form.cleaned_data["destination_sum"]
             full_data = json.dumps({"1": planet_name, "2": destination_sum})
-            answer_text = f'Расстояние до планеты {planet_name} равно {destination_sum}'
-            return JsonResponse(full_data, safe=False)
+            print(full_data)
+            answer_text = f'Расстояние до планеты {planet_name} равно {destination_sum} световым годам'
+            return JsonResponse(answer_text, safe=False)
     else:
         form = DataCalcForm()
     return render(request, "../templates/index.html", {'form': form})
