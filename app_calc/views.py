@@ -12,7 +12,7 @@ def index(request):
 def postdataforms(request):
     name = request.POST.get("name")
     number = request.POST.get("number")
-    result = f"До планеты {name}  расстояние равно {number}"
+    result = f"До планеты {name}  расстояние равно {number} световых лет"
     print(result)
     return render(request, "index.html", {"result": result})
 
