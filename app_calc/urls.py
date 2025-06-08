@@ -1,7 +1,7 @@
 from django.urls import path
-
-from app_calc.views import first_page
+from app_calc import views
 
 urlpatterns = [
-    path("", first_page),
+    path("", views.index),
+    path("postdataforms/", views.postdataforms)
 ]

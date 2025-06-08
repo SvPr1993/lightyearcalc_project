@@ -1,9 +1,9 @@
-# -*- coding: utf-8 -*-
+#-*- coding: utf-8 -*-
 #import csv
 #from app_calc.count_years import count_years
 #
 #
-#def answer_data():
+#def answer_data(count_years):
 #    answer = count_years()
 #    return answer
 #

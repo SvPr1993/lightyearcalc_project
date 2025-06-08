@@ -10,15 +10,15 @@
 </head>
 <body>
 <div class = "content-box">
-    <form action="" method="post">
+    <form action="postdataforms/" method="post">
         {% csrf_token %}
  <div class="planet-name">
         <p style="color:white;" font-size="35"><strong>Введите название планеты: </strong></p>
-     <label for="ipv4"></label><input type="text" class="planet-name">
+     <label for="ipv4"></label><input name="name" type="text" class="planet-name">
     </div>
 <div class="destination">
         <p style="color:white;" font-size="35"><strong>Введите количество световых лет до планеты: </strong></p>
-    <label for="ipv4"></label><input type="number" class="destination" min="0" pattern="[0-9]*">
+    <label for="ipv4"></label><input name="number" type="number" class="destination" min="0" pattern="[0-9]*">
     </div>
     <div class="button-send">
             <div class="button-content">
@@ -30,6 +30,7 @@
     <p><strong>Результат: </strong></p>
         </div>
  <div class="answer-box">
+     <p>{{ result }}</p>
             </div>
     </div>
 </body>
