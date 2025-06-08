@@ -3,5 +3,5 @@ from app_calc import views
 
 urlpatterns = [
     path("", views.index),
-    path("postdataforms/", views.postdataforms)
+    path("postdataforms/", views.post_data_forms),
 ]
