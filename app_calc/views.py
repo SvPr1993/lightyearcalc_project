@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
-from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
-import json
-from app_calc.forms import DataCalcForm
+from app_calc.service import count_years
 
 
 def index(request):
@@ -13,9 +11,12 @@ def post_data_forms(request):
     if request.method == 'POST':
         name = request.POST.get("name")
         number = request.POST.get("number")
-        result = f"До планеты {name}  расстояние равно {number} световых лет"
+        result = count_years(number)
         print(result)
-        return render(request, "index.html", {"result": result})
+        answer = f"До планеты {name} расстояние равно {result} световых лет"
+        return render(request, "index.html", {"result": answer})
     else:
-        redirect("index.html")
-
+        return ("index.html")
+# Сделать так чтобы в случае ввода неверных данных обрабатывались ошибки если введены некорректные данные
+# Сделать модель для планет солнечной системы и ввести расстояния для планет внести данные в базу данных (сделать лучше другой проект)
+# Сделать API и проверить в постмане как как работает
