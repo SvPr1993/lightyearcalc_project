@@ -16,7 +16,16 @@ def post_data_forms(request):
         answer = f"До планеты {name} расстояние равно {result} световых лет"
         return render(request, "index.html", {"result": answer})
     else:
-        return ("index.html")
+        return redirect("index.html")
+
+
+def valid_data(request):
+    int_result = count_years
+    if int_result is not int:
+        return render(request, "error.html")
+    else:
+        pass
+
 # Сделать так чтобы в случае ввода неверных данных обрабатывались ошибки если введены некорректные данные
 # Сделать модель для планет солнечной системы и ввести расстояния для планет внести данные в базу данных (сделать лучше другой проект)
 # Сделать API и проверить в постмане как как работает
