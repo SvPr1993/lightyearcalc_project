@@ -22,4 +22,3 @@ def index(request):
 
 def error(request):
     return render(request, "error.html")
-
