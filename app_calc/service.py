@@ -10,4 +10,3 @@ def count_years(number):
     print("full_sum", full_sum)
     return full_sum
 
-#Улучшить сервис, чтобы он определить планету и посчитать расстояние до планеты

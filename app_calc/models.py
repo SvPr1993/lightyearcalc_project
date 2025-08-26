@@ -9,3 +9,5 @@ class DataCalc(models.Model):
 class Const(models.Model):
     const_float = models.FloatField()
     data_update = models.DateField(auto_now=True)
+
+
