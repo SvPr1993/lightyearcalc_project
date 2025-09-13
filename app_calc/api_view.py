@@ -1,7 +1,14 @@
+from openai import OpenAI
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from app_calc.forms import DataCalcForm
 from app_calc.models import DataCalc
+
+client = OpenAI(
+    api_key="<sk-d64c8***********************3d60>",
+    base_url="https://api.deepseek.com"
+)
 
 
 class CheckPlanet(APIView):
