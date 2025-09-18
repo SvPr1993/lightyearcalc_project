@@ -13,7 +13,7 @@ class DataCalc(models.Model):
 
     @property
     def name_display(self):
-        return unicodedata.normalize('NFKC', self.planet_name).title()
+        return unicodedata.normalize('NFKC', self.planet_name).upper()
 
 
 class Const(models.Model):
