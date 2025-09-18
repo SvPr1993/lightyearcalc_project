@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Шаблонизатор форм с валидацией</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .error {
+            border-color: #ff3860;
+            box-shadow: 0 0 0 0.125em rgba(255, 56, 96, 0.25);
+        }
+
+        .error-message {
+            color: #ff3860;
+            font-size: 0.875em;
+            margin-top: 5px;
+        }
+
+        button {
+            background-color: #3273dc;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        button:hover {
+            background-color: #276cda;
+        }
+    </style>
+</head>
+<body>
+    <h1>Форма регистрации</h1>
+
+    <form id="registrationForm">
+        <div class="form-group">
+            <label for="name">Имя</label>
+            <input type="text" id="name" name="name" data-validate="required">
+            <div class="error-message" data-error-for="name"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" data-validate="required|email">
+            <div class="error-message" data-error-for="email"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="password">Пароль</label>
+            <input type="password" id="password" name="password" data-validate="required|minLength:6">
+            <div class="error-message" data-error-for="password"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="confirmPassword">Подтверждение пароля</label>
+            <input type="password" id="confirmPassword" name="confirmPassword" data-validate="required|matches:password">
+            <div class="error-message" data-error-for="confirmPassword"></div>
+        </div>
+
+        <button type="submit">Зарегистрироваться</button>
+    </form>
+
+    <script>
+        // Простой шаблонизатор и валидатор
+        class FormValidator {
+            constructor(formId) {
+                this.form = document.getElementById(formId);
+                this.errors = {};
+                this.validators = {
+                    required: value => value !== '' && value !== null && value !== undefined,
+                    email: value => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
+                    minLength: (value, param) => value.length >= parseInt(param),
+                    matches: (value, fieldName) => value === this.getFieldValue(fieldName)
+                };
+
+                this.setupEventListeners();
+            }
+
+            getFieldValue(fieldName) {
+                return this.form.querySelector(`[name="${fieldName}"]`).value;
+            }
+
+            setupEventListeners() {
+                this.form.addEventListener('submit', e => this.handleSubmit(e));
+
+                // Добавляем валидацию при изменении полей
+                const validatedFields = this.form.querySelectorAll('[data-validate]');
+                validatedFields.forEach(field => {
+                    field.addEventListener('blur', () => this.validateField(field));
+                    field.addEventListener('input', () => this.clearFieldError(field));
+                });
+            }
+
+            handleSubmit(e) {
+                e.preventDefault();
+                this.validateAll();
+
+                if (Object.keys(this.errors).length === 0) {
+                    alert('Форма успешно отправлена!');
+                    this.form.reset();
+                }
+            }
+
+            validateAll() {
+                this.errors = {};
+                const validatedFields = this.form.querySelectorAll('[data-validate]');
+
+                validatedFields.forEach(field => {
+                    this.validateField(field);
+                });
+            }
+
+            validateField(field) {
+                const rules = field.getAttribute('data-validate').split('|');
+                const fieldName = field.name;
+                const value = field.value;
+
+                // Очищаем предыдущие ошибки для этого поля
+                this.clearFieldError(field);
+
+                for (const rule of rules) {
+                    let [validatorName, param] = rule.split(':');
+
+                    if (!this.validators[validatorName]) continue;
+
+                    const isValid = param
+                        ? this.validators[validatorName](value, param)
+                        : this.validators[validatorName](value);
+
+                    if (!isValid) {
+                        this.addError(fieldName, validatorName, param);
+                        break;
+                    }
+                }
+            }
+
+            addError(fieldName, validatorName, param) {
+                // Создаем сообщение об ошибке
+                const messages = {
+                    required: 'Это поле обязательно для заполнения',
+                    email: 'Введите корректный email адрес',
+                    minLength: `Минимальная длина: ${param} символов`,
+                    matches: 'Пароли не совпадают'
+                };
+
+                this.errors[fieldName] = messages[validatorName] || 'Неверное значение';
+
+                // Показываем ошибку в UI
+                this.showError(fieldName);
+            }
+
+            showError(fieldName) {
+                const field = this.form.querySelector(`[name="${fieldName}"]`);
+                const errorElement = this.form.querySelector(`[data-error-for="${fieldName}"]`);
+
+                if (field) {
+                    field.classList.add('error');
+                }
+
+                if (errorElement) {
+                    errorElement.textContent = this.errors[fieldName];
+                }
+            }
+
+            clearFieldError(field) {
+                const fieldName = field.name;
+                const errorElement = this.form.querySelector(`[data-error-for="${fieldName}"]`);
+
+                field.classList.remove('error');
+
+                if (errorElement) {
+                    errorElement.textContent = '';
+                }
+
+                if (this.errors[fieldName]) {
+                    delete this.errors[fieldName];
+                }
+            }
+        }
+
+        // Инициализация валидатора при загрузке страницы
+        document.addEventListener('DOMContentLoaded', () => {
+            new FormValidator('registrationForm');
+        });
+    </script>
+</body>
+</html>

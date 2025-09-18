@@ -1,0 +1,1 @@
+#planet_obj = DataCalc.objects.filter(planet_name=upper_string).first()

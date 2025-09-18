@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'app_calc',
     'rest_framework',
-    'deepseek_app',
 ]
 
 

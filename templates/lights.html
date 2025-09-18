@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Шаблонизатор данных о планетах</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #6ab7ff;
+            font-size: 2.5rem;
+            text-shadow: 0 0 10px rgba(106, 183, 255, 0.5);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #a5d8ff;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid rgba(106, 183, 255, 0.3);
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.2);
+            color: #fff;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #6ab7ff;
+            box-shadow: 0 0 0 3px rgba(106, 183, 255, 0.3);
+        }
+
+        input.error {
+            border-color: #ff4757;
+            box-shadow: 0 0 0 3px rgba(255, 71, 87, 0.3);
+        }
+
+        .error-message {
+            color: #ff4757;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(90deg, #6ab7ff, #4a9df0);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: linear-gradient(90deg, #4a9df0, #6ab7ff);
+            transform: translateY(-2px);
+            box-shadow: 0 7px 14px rgba(0, 0, 0, 0.2);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            display: none;
+        }
+
+        .result h2 {
+            color: #6ab7ff;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .planet-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .planet-icon {
+            font-size: 80px;
+            margin-bottom: 15px;
+        }
+
+        .planet-info {
+            width: 100%;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Данные о планете</h1>
+
+        <form id="planetForm">
+            <div class="form-group">
+                <label for="planetName">Название планеты</label>
+                <input type="text" id="planetName" placeholder="Введите название планеты">
+                <div class="error-message" id="nameError">Название планеты должно содержать только буквы и быть не короче 2 символов</div>
+            </div>
+
+            <div class="form-group">
+                <label for="planetDistance">Расстояние до планеты (в млн. км)</label>
+                <input type="number" id="planetDistance" placeholder="Введите расстояние">
+                <div class="error-message" id="distanceError">Расстояние должно быть положительным числом не более 100000</div>
+            </div>
+
+            <button type="submit">Отправить данные</button>
+        </form>
+
+        <div class="result" id="result">
+            <h2>Информация о планете</h2>
+            <div class="planet-card">
+                <div class="planet-icon">🪐</div>
+                <div class="planet-info">
+                    <div class="info-row">
+                        <span>Название:</span>
+                        <span id="resultName"></span>
+                    </div>
+                    <div class="info-row">
+                        <span>Расстояние:</span>
+                        <span id="resultDistance"></span>
+                    </div>
+                    <div class="info-row">
+                        <span>Расстояние в а.е.:</span>
+                        <span id="resultAstronomical"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('planetForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Сброс предыдущих ошибок
+            resetErrors();
+
+            // Получение значений
+            const name = document.getElementById('planetName').value.trim();
+            const distance = document.getElementById('planetDistance').value;
+
+            // Валидация
+            let isValid = true;
+
+            if (!/^[a-zA-Zа-яА-Я\s]{2,}$/.test(name)) {
+                showError('planetName', 'nameError');
+                isValid = false;
+            }
+
+            const distanceNum = parseFloat(distance);
+            if (isNaN(distanceNum) || distanceNum <= 0 || distanceNum > 100000) {
+                showError('planetDistance', 'distanceError');
+                isValid = false;
+            }
+
+            // Если данные верны, отображаем результат
+            if (isValid) {
+                showResult(name, distanceNum);
+            }
+        });
+
+        function showError(inputId, errorId) {
+            document.getElementById(inputId).classList.add('error');
+            document.getElementById(errorId).style.display = 'block';
+        }
+
+        function resetErrors() {
+            const inputs = document.querySelectorAll('input');
+            inputs.forEach(input => input.classList.remove('error'));
+
+            const errors = document.querySelectorAll('.error-message');
+            errors.forEach(error => error.style.display = 'none');
+        }
+
+        function showResult(name, distance) {
+            // Расчет астрономических единиц (1 а.е. = 149.6 млн. км)
+            const astronomicalUnits = (distance / 149.6).toFixed(2);
+
+            // Заполнение данных в результат
+            document.getElementById('resultName').textContent = name;
+            document.getElementById('resultDistance').textContent = `${distance} млн. км`;
+            document.getElementById('resultAstronomical').textContent = `${astronomicalUnits} а.е.`;
+
+            // Показываем результат
+            document.getElementById('result').style.display = 'block';
+
+            // Меняем иконку в зависимости от названия планеты
+            const icon = document.querySelector('.planet-icon');
+            const nameLower = name.toLowerCase();
+
+            if (nameLower.includes('меркурий') || nameLower.includes('mercury')) icon.textContent = '☿';
+            else if (nameLower.includes('венер') || nameLower.includes('venus')) icon.textContent = '♀';
+            else if (nameLower.includes('земл') || nameLower.includes('earth')) icon.textContent = '🌍';
+            else if (nameLower.includes('марс') || nameLower.includes('mars')) icon.textContent = '♂';
+            else if (nameLower.includes('юпитер') || nameLower.includes('jupiter')) icon.textContent = '♃';
+            else if (nameLower.includes('сатурн') || nameLower.includes('saturn')) icon.textContent = '♄';
+            else if (nameLower.includes('уран') || nameLower.includes('uranus')) icon.textContent = '♅';
+            else if (nameLower.includes('нептун') || nameLower.includes('neptune')) icon.textContent = '♆';
+            else if (nameLower.includes('плутон') || nameLower.includes('pluto')) icon.textContent = '♇';
+            else icon.textContent = '🪐';
+        }
+    </script>
+</body>
+</html>
