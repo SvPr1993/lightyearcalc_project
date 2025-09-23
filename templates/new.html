@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LightYears</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #0b0b1d;
+            color: white;
+            margin: 0;
+            padding: 20px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><defs><radialGradient id="grad" cx="50%" cy="50%" r="50%" fx="50%" fy="50%"><stop offset="0%" style="stop-color:rgb(11,11,29);stop-opacity:1" /><stop offset="100%" style="stop-color:rgb(0,0,0);stop-opacity:1" /></radialGradient></defs><rect width="100%" height="100%" fill="url(%23grad)" /><circle cx="20%" cy="30%" r="2" fill="white" /><circle cx="80%" cy="40%" r="1" fill="white" /><circle cx="60%" cy="70%" r="1" fill="white" /><circle cx="30%" cy="20%" r="1" fill="white" /><circle cx="50%" cy="50%" r="1" fill="white" /><circle cx="10%" cy="80%" r="1" fill="white" /><circle cx="70%" cy="10%" r="1" fill="white" /><circle cx="90%" cy="90%" r="1" fill="white" /></svg>');
+        }
+
+        .content-box {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: rgba(25, 25, 55, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+        }
+
+        .planet-name, .destination {
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #4fc3f7;
+            border-radius: 5px;
+            background-color: #1a1a3a;
+            color: white;
+            font-size: 16px;
+        }
+
+        input[type="text"].error {
+            border-color: #ff4081;
+            box-shadow: 0 0 5px rgba(255, 64, 129, 0.5);
+        }
+
+        .error-message {
+            color: #ff4081;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .button-send {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        input[type="submit"], input[type="button"] {
+            background: linear-gradient(45deg, #00bcd4, #0288d1);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        input[type="submit"]:hover, input[type="button"]:hover {
+            box-shadow: 0 0 10px rgba(0, 188, 212, 0.7);
+            transform: translateY(-2px);
+        }
+
+        .text-result {
+            margin-top: 20px;
+            font-size: 20px;
+            border-bottom: 1px solid #4fc3f7;
+            padding-bottom: 10px;
+        }
+
+        .answer-box {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: rgba(38, 50, 86, 0.5);
+            border-radius: 5px;
+            min-height: 100px;
+        }
+
+        .get-back-button {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        #result {
+            display: none;
+        }
+
+        .planet-icon {
+            font-size: 40px;
+            text-align: center;
+            margin: 10px 0;
+        }
+
+        .result-item {
+            margin: 8px 0;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+<div class="content-box">
+    <form id="planetForm" action="" method="post">
+        <div class="planet-name">
+            <p><strong>Введите название планеты: </strong></p>
+            <input id="planetName" name="name" type="text">
+        </div>
+        <div class="error-message" id="nameError">Название планеты должно содержать только буквы и быть не короче 2 символов</div>
+
+        <div class="destination">
+            <p><strong>Введите количество световых лет до планеты: </strong></p>
+            <input id="planetDistance" name="number" type="text">
+        </div>
+        <div class="error-message" id="distanceError">Расстояние должно быть положительным числом не более 100000</div>
+
+        <div class="button-send">
+            <div class="button-content">
+                <input type="submit" value="Отправить">
+            </div>
+        </div>
+    </form>
+
+    <div class="text-result">
+        <p><strong>Результат: </strong></p>
+    </div>
+
+    <div class="answer-box">
+        <div id="result">
+            <div class="planet-icon">🪐</div>
+            <div class="result-item">Название планеты: <span id="resultName"></span></div>
+            <div class="result-item">Расстояние: <span id="resultDistance"></span> световых лет</div>
+            <div class="result-item">В астрономических единицах: <span id="resultAstronomical"></span> а.е.</div>
+        </div>
+        <p>{{ result }}</p>
+    </div>
+</div>
+
+<div class="get-back-button">
+    <a href="/"><input type="button" value="Начать ввод данных заново"></a>
+</div>
+
+<script>
+    document.getElementById('planetForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // Сброс предыдущих ошибок
+        resetErrors();
+
+        // Получение значений
+        const name = document.getElementById('planetName').value.trim();
+        const distance = document.getElementById('planetDistance').value;
+
+        // Валидация
+        let isValid = true;
+
+        if (!/^[a-zA-Zа-яА-Я\s]{2,}$/.test(name)) {
+            showError('planetName', 'nameError');
+            isValid = false;
+        }
+
+        const distanceNum = parseFloat(distance);
+        if (isNaN(distanceNum) || distanceNum <= 0 || distanceNum > 100000) {
+            showError('planetDistance', 'distanceError');
+            isValid = false;
+        }
+
+        // Если данные верны, отображаем результат
+        if (isValid) {
+            showResult(name, distanceNum);
+        }
+    });
+
+    function showError(inputId, errorId) {
+        document.getElementById(inputId).classList.add('error');
+        document.getElementById(errorId).style.display = 'block';
+    }
+
+    function resetErrors() {
+        const inputs = document.querySelectorAll('input');
+        inputs.forEach(input => input.classList.remove('error'));
+
+        const errors = document.querySelectorAll('.error-message');
+        errors.forEach(error => error.style.display = 'none');
+    }
+
+    function showResult(name, distance) {
+        // Конвертация световых лет в астрономические единицы
+        // 1 световой год = 63241.1 а.е.
+        const astronomicalUnits = (distance * 63241.1).toFixed(2);
+
+        // Заполнение данных в результат
+        document.getElementById('resultName').textContent = name;
+        document.getElementById('resultDistance').textContent = distance;
+        document.getElementById('resultAstronomical').textContent = astronomicalUnits;
+
+        // Показываем результат
+        document.getElementById('result').style.display = 'block';
+
+        // Меняем иконку в зависимости от названия планеты
+        const icon = document.querySelector('.planet-icon');
+        const nameLower = name.toLowerCase();
+
+        if (nameLower.includes('меркурий') || nameLower.includes('mercury')) icon.textContent = '☿';
+        else if (nameLower.includes('венер') || nameLower.includes('venus')) icon.textContent = '♀';
+        else if (nameLower.includes('земл') || nameLower.includes('earth')) icon.textContent = '🌍';
+        else if (nameLower.includes('марс') || nameLower.includes('mars')) icon.textContent = '♂';
+        else if (nameLower.includes('юпитер') || nameLower.includes('jupiter')) icon.textContent = '♃';
+        else if (nameLower.includes('сатурн') || nameLower.includes('saturn')) icon.textContent = '♄';
+        else if (nameLower.includes('уран') || nameLower.includes('uranus')) icon.textContent = '♅';
+        else if (nameLower.includes('нептун') || nameLower.includes('neptune')) icon.textContent = '♆';
+        else if (nameLower.includes('плутон') || nameLower.includes('pluto')) icon.textContent = '♇';
+        else icon.textContent = '🪐';
+    }
+</script>
+</body>
+</html>

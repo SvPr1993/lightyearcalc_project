@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'app_calc',
+    'app_planets',
     'rest_framework',
 ]
 

@@ -12,12 +12,12 @@ def index(request):
             result = count_years(number)
             print(result)
             answer = f"До планеты {name} расстояние равно {result} световых лет"
-            return render(request, "index.html", {"result": answer})
+            return render(request, "app_planets/planets_info.html", {"result": answer})
         except:
             return redirect("error")
 
     else:
-        return render(request, "index.html")
+        return render(request, "app_planets/planets_info.html")
 
 
 def error(request):
