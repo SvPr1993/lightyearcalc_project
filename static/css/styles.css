@@ -141,3 +141,15 @@ input::placeholder {
   opacity: 0.5;
   color: #000000;
 }
+
+input.error {
+    border-color: #ff4757;
+    box-shadow: 0 0 0 3px rgba(255, 71, 87, 0.3);
+}
+
+.error-message {
+    color: #ff4757;
+    font-size: 14px;
+    margin-top: 5px;
+    display: none;
+}
