@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*
 from django.shortcuts import render, redirect
 
+from app_planets.forms import PlanetInfosForm
 from app_planets.service import planets_info_service
 
 
@@ -11,7 +12,8 @@ def planet_info_views(request):
             planets_distance = planets_info_service(planet_name)
             answer = f"До планеты {planet_name} расстояние равно {planets_distance} световых лет"
             return render(request, "app_planets/planets_info.html", {"result": answer})
-        except:
+        except Exception as e:
+            print("++++++++++++++EXEPTION", e)
             return redirect("error")
 
     else:
@@ -24,7 +26,7 @@ def error(request):
 # Написать форму, чтобы оно брало из базы данных или написать формулу для посчета
 # Если планеты нет в базе и пользователь заполнил данные в форме она выводит либо из базы либо считает
 # Нужно в это приложение наш API
-# Прочитать про концепцию DDD
-# После проверки работы приложение удалить весь лишний код и приложения
-# Перетащить в docker postgres+
-# Нужно убрать из докера django, оставить только postgres
+# Нужно прописать вторую часть кода, которая в случае отсутствие планеты в джанго админ, программа в шаблоне просила ввести расстояние до планеты
+# Нужно передать в общий фронтэнд имя планеты которую ввел пользоветель, сделать скрытое поле (тег hide) для планеты и отлавливать переменные во вьюс
+# Обязательно сделать, чтобы планета вводилась 2 раза, только 1
+# Показать проект фронт энд проекта space adventure

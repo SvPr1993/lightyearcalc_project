@@ -1,7 +1,12 @@
 #!/usr/bin/env python
 """Django's command-line utility for administrative tasks."""
+import locale
 import os
 import sys
+
+if sys.platform == "win64":
+    os.system('chcp 65001 > nul')  # Устанавливаем кодовую страницу UTF-8
+    locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
 
 
 def main():
