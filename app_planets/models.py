@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 import unicodedata
 
@@ -14,6 +15,7 @@ class PlanetInfos(models.Model):
         self.planet_name = unicodedata.normalize('NFKC', self.planet_name).upper().strip()
 
         super().save(*args, **kwargs)
+
 
     # @property
     # def name_display(self):
