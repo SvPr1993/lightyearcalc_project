@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no»"/>
+    <link rel="shortcut icon" type="image/x-icon" href="../../static/img/icon.png"/>
+    <link rel="stylesheet" type="text/css" href="../../static/css/styles.css"/>
+    <title>LightYears</title>
+</head>
+<body>
+Второй шаблон
+<div class = "content-box">
+    <form action="" method="post">
+        {% csrf_token %}
+<div class="destination">
+        <p style="color:white;" font-size="35"><strong>Введите количество световых лет до планеты: </strong></p>
+    <label for="ipv4"></label><input id="planetDistance" name="destination_sum" type="text" class="destination"></div>
+        <div class="error-message" id="distanceError">Расстояние должно быть положительным числом не более 100000</div>
+    <div class="button-send">
+            <div class="button-content">
+                <input type="submit" value="Отправить">
+            </div>
+        </div>
+        </form>
+    <div class="text-result">
+    <p><strong>Результат: </strong></p>
+        </div>
+ <div class="answer-box">
+     <p>{{ result }}</p>
+            </div>
+    </div>
+<div class="get-back-button">
+    <a href="/static"><input type="button" value="Начать ввод данных заново"></a>
+</div>
+<script>
+        document.getElementById('planetForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Сброс предыдущих ошибок
+            resetErrors();
+
+            // Получение значений
+            const name = document.getElementById('planetName').value.trim();
+            const distance = document.getElementById('planetDistance').value;
+
+            // Валидация
+            let isValid = true;
+
+            if (!/^[a-zA-Zа-яА-Я\s]{2,}$/.test(name)) {
+                showError('planetName', 'nameError');
+                isValid = false;
+            }
+
+            const distanceNum = parseFloat(distance);
+            if (isNaN(distanceNum) || distanceNum <= 0 || distanceNum > 100000) {
+                showError('planetDistance', 'distanceError');
+                isValid = false;
+            }
+
+            // Если данные верны, отображаем результат
+            if (isValid) {
+                showResult(name, distanceNum);
+            }
+        });
+
+        function showError(inputId, errorId) {
+            document.getElementById(inputId).classList.add('error');
+            document.getElementById(errorId).style.display = 'block';
+        }
+
+        function resetErrors() {
+            const inputs = document.querySelectorAll('input');
+            inputs.forEach(input => input.classList.remove('error'));
+
+            const errors = document.querySelectorAll('.error-message');
+            errors.forEach(error => error.style.display = 'none');
+        }
+
+        function showResult(name, distance) {
+            // Расчет астрономических единиц (1 а.е. = 149.6 млн. км)
+            const astronomicalUnits = (distance / 149.6).toFixed(2);
+
+            // Заполнение данных в результат
+            document.getElementById('resultName').textContent = name;
+            document.getElementById('resultDistance').textContent = `${distance} млн. км`;
+            document.getElementById('resultAstronomical').textContent = `${astronomicalUnits} а.е.`;
+
+            // Показываем результат
+            document.getElementById('result').style.display = 'block';
+
+            // Меняем иконку в зависимости от названия планеты
+            const icon = document.querySelector('.planet-icon');
+            const nameLower = name.toLowerCase();
+
+            if (nameLower.includes('меркурий') || nameLower.includes('mercury')) icon.textContent = '☿';
+            else if (nameLower.includes('венер') || nameLower.includes('venus')) icon.textContent = '♀';
+            else if (nameLower.includes('земл') || nameLower.includes('earth')) icon.textContent = '🌍';
+            else if (nameLower.includes('марс') || nameLower.includes('mars')) icon.textContent = '♂';
+            else if (nameLower.includes('юпитер') || nameLower.includes('jupiter')) icon.textContent = '♃';
+            else if (nameLower.includes('сатурн') || nameLower.includes('saturn')) icon.textContent = '♄';
+            else if (nameLower.includes('уран') || nameLower.includes('uranus')) icon.textContent = '♅';
+            else if (nameLower.includes('нептун') || nameLower.includes('neptune')) icon.textContent = '♆';
+            else if (nameLower.includes('плутон') || nameLower.includes('pluto')) icon.textContent = '♇';
+            else icon.textContent = '🪐';
+        }
+    </script>
+</body>
+</html>
