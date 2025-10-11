@@ -12,4 +12,4 @@ def destination_sum_service(destination_sum: int):
     print(type(destination_const_km), type(destination_sum))
     full_sum_km = destination_sum * destination_const_km
     print("full_sum_km", full_sum_km)
-    return full_sum_km
+    return round(full_sum_km)

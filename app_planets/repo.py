@@ -10,5 +10,5 @@ def planet_info_repo(planet_name: str):
 
 
 def destination_sum_repo():
-    one_light_year_km = 9460730472580.8
+    one_light_year_km = 9.46*1e12
     return one_light_year_km
