@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*
 from django.shortcuts import render, redirect
-
-from app_planets.models import PlanetInfos
 from app_planets.service import planets_info_service, destination_sum_service
 
 
@@ -11,7 +9,7 @@ def planet_info_views(request):
         # Данный код исполняется если планета есть в базе в джанго админ
         planets_distance = planets_info_service(planet_name)
         if planets_distance is not None:
-            answer = f"До планеты {planet_name} расстояние равно {planets_distance} световых лет"
+            answer = f"До планеты {planet_name} расстояние равно {planets_distance} километров"
             return render(request, "app_planets/planets_info.html", {"result": answer})
         else:
             return redirect("destination_sum")
@@ -22,12 +20,13 @@ def planet_info_views(request):
 
 def destination_sum_views(request):
     print("Сработала вторая вьев,,,,,,,,,,,,,,,,,,,,,")
+    #Данный код срабатывает если планеты не в базе джаго админ
     if request.method == 'POST':
         destination_sum = request.POST.get("destination_sum")
         int_destination_sum = int(destination_sum)
         new_planets_distance = destination_sum_service(int_destination_sum)
         print(new_planets_distance, "++++++++++++++++")
-        answer = f"До планеты {'Планета'} расстояние равно {new_planets_distance} световых лет"
+        answer = f"До планеты {'Планета'} расстояние равно {new_planets_distance} километров"
         return render(request, "app_planets/destination_sum.html", {"result": answer})
 
     else:
