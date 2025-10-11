@@ -1,4 +1,4 @@
-<h1 align="center">Простое приложение погоды</a></h1>
+<h1 align="center">LightYearCalc_Project</a></h1>
 
-<h2<img src=![Screenshot](./ScreenshotWeather.png)></h2>
-
+<img src=templates/img/ScreenshotLightYears1.png/>
+<img src=templates/img/ScreenshotLightYears2.png/>
