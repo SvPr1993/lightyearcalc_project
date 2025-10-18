@@ -34,14 +34,14 @@ def destination_sum_views(request, planet=""):
         return render(request, "app_planets/destination_sum.html", {"result": answer})
 
     else:
-        return render(request, "app_planets/destination_sum.html")
+        return render(request, "app_planets/destination_sum.html", {"planet": planet})
 
 
 def error(request):
     return render(request, "app_planets/error.html")
 
-# Добавить во второй шаблон поле для планеты, если случай если напрямую там нет введенной планеты, если есть то планета планета там тоже есть
-# Показать проект фронт энд проекта space adventure
+# Добавить во второй шаблон поле для планеты, если случай если напрямую там нет введенной планеты, если есть то планета планета там тоже есть+
+
 
 
 # ТЗ к сайту:
