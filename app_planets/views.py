@@ -19,7 +19,6 @@ def planet_info_views(request):
 
 
 def destination_sum_views(request, planet=""):
-    print("Сработала вторая вьев,,,,,,,,,,,,,,,,,,,,,")
     print(planet)
     # Данный код срабатывает если планеты не в базе джанго админ
     if request.method == 'POST':
