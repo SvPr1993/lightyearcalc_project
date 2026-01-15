@@ -18,8 +18,9 @@ def planet_info_views(request):
         return render(request, "app_planets/planets_info.html")
 
 
-def destination_sum_views(request, planet=""):
+def destination_sum_views(request, planet="", distance=""):
     print(planet)
+    print(distance)
     # Данный код срабатывает если планеты не в базе джанго админ
     if request.method == 'POST':
         destination_sum = request.POST.get("destination_sum")
@@ -30,7 +31,7 @@ def destination_sum_views(request, planet=""):
         except:
             message_error = "Вы ввели не число!"
             answer = message_error
-        return render(request, "app_planets/destination_sum.html", {"result": answer})
+        return render(request, "app_planets/destination_sum.html", {"result": answer, "planet": planet, "distance": distance})
 
     else:
         return render(request, "app_planets/destination_sum.html", {"planet": planet})
