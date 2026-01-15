@@ -16,7 +16,3 @@ class PlanetInfos(models.Model):
 
         super().save(*args, **kwargs)
 
-
-    # @property
-    # def name_display(self):
-    #    return unicodedata.normalize('NFKC', self.planet_name).upper()
