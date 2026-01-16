@@ -143,4 +143,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CONSTANCE = "https://numbersapi.com/number/type/math"
 
-URL = 'http://127.0.0.1:3333/'
+URL = 'http://127.0.0.1:3333'
